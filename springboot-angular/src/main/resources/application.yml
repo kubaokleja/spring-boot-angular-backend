@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/springbootangular
+    password: password
+    username: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  flyway:
+    baselineOnMigrate: true
+    url: jdbc:mysql://localhost:3306/mysql
+    schemas: springbootangular
+    user: "root"
+    password: "password"
+    validateMigrationNaming: true
+  mail:
+    host: localhost
+    port: 1025
+    username: hello
+    password: hello
+
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+logging:
+  level:
+    org:
+      flywaydb: debug
+
+jwt:
+  secret: TEWXjbnfaHMB2qt3jTRQ5szUssa91McOmandPp4djGses2nhgBIsNqYD7A0iX8n
+
+server:
+  servlet:
+    context-path: /api/v1
+
+admin:
+  password: password
+  email: admin@admin.com
+
+app:
+  url: http://localhost:4200
