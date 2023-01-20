@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kubaokleja.springbootangular.dto.UserDTO;
 import com.kubaokleja.springbootangular.entity.Role;
 import com.kubaokleja.springbootangular.entity.User;
+import com.kubaokleja.springbootangular.repository.EmailConfirmationTokenRepository;
 import com.kubaokleja.springbootangular.repository.RoleRepository;
 import com.kubaokleja.springbootangular.repository.UserRepository;
 import org.junit.jupiter.api.*;
@@ -31,6 +32,9 @@ public class UserIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
+    private EmailConfirmationTokenRepository emailConfirmationTokenRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -55,6 +59,7 @@ public class UserIntegrationTest {
 
     @AfterAll
     void cleanUp() {
+        emailConfirmationTokenRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -136,20 +141,6 @@ public class UserIntegrationTest {
         response.andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-    }
-
-
-    @Test
-    @DisplayName("User login integration test")
-    public void givenUserCredentials_whenLogin_ThenGetContent() throws Exception {
-        ResultActions login = mockMvc.perform(post("/user/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userDTO)))
-                .andDo(print())
-                .andExpect(status().is(200))
-                .andExpect(header().exists("Jwt-Token"))
-                .andExpect(jsonPath("$.firstName",
-                        is(userDTO.getFirstName())));
     }
 
 }

@@ -8,6 +8,7 @@ import com.kubaokleja.springbootangular.exception.UserNotFoundException;
 import com.kubaokleja.springbootangular.exception.UsernameExistException;
 import com.kubaokleja.springbootangular.repository.RoleRepository;
 import com.kubaokleja.springbootangular.repository.UserRepository;
+import com.kubaokleja.springbootangular.service.email.EmailSender;
 import com.kubaokleja.springbootangular.validation.UserValidator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,8 @@ public class UserManagementServiceTest {
     private BCryptPasswordEncoder passwordEncoder;
     @Mock
     private UserValidator userValidator;
+    @Mock
+    private EmailSender emailSender;
 
     @InjectMocks
     private UserManagementService userManagementService;
