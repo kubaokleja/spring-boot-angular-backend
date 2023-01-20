@@ -9,7 +9,6 @@ import com.kubaokleja.springbootangular.exception.UsernameExistException;
 import com.kubaokleja.springbootangular.repository.RoleRepository;
 import com.kubaokleja.springbootangular.repository.UserRepository;
 import com.kubaokleja.springbootangular.service.email.EmailSender;
-import com.kubaokleja.springbootangular.service.email.EmailService;
 import com.kubaokleja.springbootangular.validation.UserValidator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -57,7 +56,7 @@ public class UserManagementService {
     User createUser(UserDTO userDTO) throws EmailExistException, UsernameExistException {
         userValidator.validateUsernameAndEmail(userDTO.getUsername(), userDTO.getEmail());
 
-        String password = RandomStringUtils.random(10);
+        String password = RandomStringUtils.randomAlphabetic(10);
         
         String encodedPassword = passwordEncoder.encode(password);
 
