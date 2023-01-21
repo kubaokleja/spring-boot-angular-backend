@@ -1,30 +1,39 @@
 package com.kubaokleja.springbootangular.service;
 
+import com.kubaokleja.springbootangular.dto.CustomEmail;
 import com.kubaokleja.springbootangular.dto.UserDTO;
 import com.kubaokleja.springbootangular.entity.User;
 import com.kubaokleja.springbootangular.exception.EmailExistException;
+import com.kubaokleja.springbootangular.exception.EmailNotFoundException;
 import com.kubaokleja.springbootangular.exception.UserNotFoundException;
 import com.kubaokleja.springbootangular.repository.UserRepository;
 import com.kubaokleja.springbootangular.security.UserPrincipal;
+import com.kubaokleja.springbootangular.service.email.EmailSender;
 import com.kubaokleja.springbootangular.validation.UserValidator;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Optional;
 
+import static com.kubaokleja.springbootangular.constant.EmailConstant.NEW_ACCOUNT_SUBJECT;
+import static com.kubaokleja.springbootangular.constant.EmailConstant.PASSWORD_RESET;
 import static com.kubaokleja.springbootangular.constant.SecurityConstant.ACCESS_DENIED_MESSAGE;
+import static com.kubaokleja.springbootangular.constant.UserImplConstant.NO_EMAIL_FOUND;
 import static com.kubaokleja.springbootangular.constant.UserImplConstant.NO_USER_FOUND_BY_USERNAME;
 
 @Service
@@ -36,12 +45,20 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final LoginAttemptService loginAttemptService;
     private final UserValidator userValidator;
+    private final EmailSender emailSender;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository, LoginAttemptService loginAttemptService, UserValidator userValidator) {
+    public CustomUserDetailsService(UserRepository userRepository,
+                                    LoginAttemptService loginAttemptService,
+                                    UserValidator userValidator,
+                                    EmailSender emailSender,
+                                    BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.loginAttemptService = loginAttemptService;
         this.userValidator = userValidator;
+        this.emailSender = emailSender;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -95,6 +112,28 @@ public class CustomUserDetailsService implements UserDetailsService {
         userRepository.delete(user);
     }
 
+    void resetPassword(String email) throws EmailNotFoundException {
+        User user = userRepository.findByEmailNativeSQLNamedParam(email);
+        if(user == null) {
+            throw new EmailNotFoundException(NO_EMAIL_FOUND);
+        }
+        String password = RandomStringUtils.randomAlphanumeric(10);
+        emailSender.send(new CustomEmail(
+                email,
+                PASSWORD_RESET,
+                buildResetPasswordEmail(user.getFirstName(), password),
+                MediaType.TEXT_PLAIN_VALUE));
+
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
+    void changePassword(String password) {
+        User user = getLoggedUser().orElseThrow(() -> new AccessDeniedException(ACCESS_DENIED_MESSAGE));
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
     private void validateUserActionPermission(User user, String userId) {
         User loggedUser = getLoggedUser().orElseThrow(() -> new AccessDeniedException(ACCESS_DENIED_MESSAGE));
         validateIfLoggedUserHasSameId(loggedUser, userId);
@@ -103,7 +142,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private Optional<User> getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || StringUtils.isEmpty(authentication.getName())) {
-            Optional.empty();
+            return Optional.empty();
         }
         return Optional.of(findUserByUsername(authentication.getName()));
     }
@@ -125,6 +164,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else{
             loginAttemptService.evictUserFromLoginAttemptCache(user.getUsername());
         }
+    }
+
+    private String buildResetPasswordEmail(String firstName, String password) {
+        return "Hello " + firstName + "!\n\nYour new account password is: " + password + "\n\nThe Support Team";
     }
 
 }

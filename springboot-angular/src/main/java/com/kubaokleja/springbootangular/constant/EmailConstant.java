@@ -7,4 +7,5 @@ public class EmailConstant {
     public static final String USER_SUCCESSFULLY_CONFIRMED = "User successfully confirmed";
     public static final String CONFIRM_EMAIL_SUBJECT = "Confirm your email";
     public static final String NEW_ACCOUNT_SUBJECT = "New Account";
+    public static final String PASSWORD_RESET = "Password reset";
 }

@@ -3,6 +3,7 @@ package com.kubaokleja.springbootangular.service;
 import com.kubaokleja.springbootangular.dto.UserDTO;
 import com.kubaokleja.springbootangular.entity.User;
 import com.kubaokleja.springbootangular.exception.EmailExistException;
+import com.kubaokleja.springbootangular.exception.EmailNotFoundException;
 import com.kubaokleja.springbootangular.exception.UserNotFoundException;
 import com.kubaokleja.springbootangular.exception.UsernameExistException;
 import com.kubaokleja.springbootangular.security.UserPrincipal;
@@ -77,5 +78,13 @@ public class UserServiceFacade {
 
     public String confirmRegistrationToken(String token) {
         return registrationService.confirmToken(token);
+    }
+
+    public void resetPassword(String email) throws EmailNotFoundException {
+        userDetailsService.resetPassword(email);
+    }
+
+    public void changePassword(String password) {
+        userDetailsService.changePassword(password);
     }
 }

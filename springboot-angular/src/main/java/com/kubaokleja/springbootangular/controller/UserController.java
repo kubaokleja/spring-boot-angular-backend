@@ -3,10 +3,7 @@ package com.kubaokleja.springbootangular.controller;
 import com.kubaokleja.springbootangular.dto.HttpResponse;
 import com.kubaokleja.springbootangular.dto.UserDTO;
 import com.kubaokleja.springbootangular.entity.User;
-import com.kubaokleja.springbootangular.exception.EmailExistException;
-import com.kubaokleja.springbootangular.exception.ExceptionHandling;
-import com.kubaokleja.springbootangular.exception.UserNotFoundException;
-import com.kubaokleja.springbootangular.exception.UsernameExistException;
+import com.kubaokleja.springbootangular.exception.*;
 import com.kubaokleja.springbootangular.mapper.UserMapper;
 import com.kubaokleja.springbootangular.security.UserPrincipal;
 import com.kubaokleja.springbootangular.service.UserServiceFacade;
@@ -34,7 +31,7 @@ public class UserController extends ExceptionHandling {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO) {
         UserPrincipal loggedUserPrincipal = userService.login(userDTO);
         HttpHeaders jwtHeader = userService.getJwtHeader(loggedUserPrincipal);
         UserDTO loggedUserDTO = UserMapper.mapUserToUserDTO(loggedUserPrincipal.getUser());
@@ -68,7 +65,7 @@ public class UserController extends ExceptionHandling {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity deleteUser(@PathVariable("userId") String userId){
+    public ResponseEntity deleteUser(@PathVariable("userId") String userId) {
         userService.deleteUser(userId);
         return response(OK, "User deleted successfully");
     }
@@ -77,7 +74,7 @@ public class UserController extends ExceptionHandling {
     @GetMapping("/list")
     public ResponseEntity<Page<UserDTO>> getUsers(@RequestParam Optional<String> keyword,
                                                   @RequestParam Optional<Integer> page,
-                                                  @RequestParam Optional<Integer> size){
+                                                  @RequestParam Optional<Integer> size) {
         Page<UserDTO> users = userService.getUsers(keyword.orElse(""), page.orElse(0), size.orElse(10))
                 .map(UserMapper::mapUserToUserDTO);
         return new ResponseEntity<>(users, OK);
@@ -104,6 +101,18 @@ public class UserController extends ExceptionHandling {
     public ResponseEntity<HttpResponse> deleteUserByAdmin(@PathVariable("userId") String userId) throws UserNotFoundException {
         userService.deleteUserByAdmin(userId);
         return response(OK, "User deleted successfully");
+    }
+
+    @GetMapping("/reset-password/{email}")
+    public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email) throws EmailNotFoundException {
+        userService.resetPassword(email);
+        return response(OK, "Password has been sent to email");
+    }
+
+    @PostMapping("/change-password/{password}")
+    public ResponseEntity<HttpResponse> changePassword(@PathVariable("password") String password) {
+        userService.changePassword(password);
+        return response(OK, "Password has been changed");
     }
 
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
