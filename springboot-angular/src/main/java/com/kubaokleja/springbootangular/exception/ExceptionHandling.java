@@ -16,6 +16,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.persistence.NoResultException;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class ExceptionHandling {
     private static final String ACCOUNT_DISABLED = "Your account has been disabled. If this is an error, please contact administration";
     private static final String ERROR_PROCESSING_FILE = "Error occurred while processing file";
     private static final String NOT_ENOUGH_PERMISSION = "You do not have enough permission";
+    private static final String FILE_TOO_LARGE = "File too large.";
 
 
     @ExceptionHandler(DisabledException.class)
@@ -112,6 +114,11 @@ public class ExceptionHandling {
     public ResponseEntity<HttpResponse> iOException(IOException exception) {
         LOGGER.error(exception.getMessage());
         return createHttpResponse(INTERNAL_SERVER_ERROR, ERROR_PROCESSING_FILE);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<HttpResponse> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+        return createHttpResponse(EXPECTATION_FAILED, FILE_TOO_LARGE);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

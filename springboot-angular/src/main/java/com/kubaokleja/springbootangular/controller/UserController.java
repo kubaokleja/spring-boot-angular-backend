@@ -7,16 +7,21 @@ import com.kubaokleja.springbootangular.exception.*;
 import com.kubaokleja.springbootangular.mapper.UserMapper;
 import com.kubaokleja.springbootangular.security.UserPrincipal;
 import com.kubaokleja.springbootangular.service.UserServiceFacade;
+import com.kubaokleja.springbootangular.utility.CSVHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
+
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -115,6 +120,16 @@ public class UserController extends ExceptionHandling {
         return response(OK, "Password has been changed");
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<HttpResponse> uploadFiles(@RequestParam("file")MultipartFile multipartFile) throws IOException {
+        if(multipartFile == null || !CSVHelper.hasCSVFormat(multipartFile)) {
+            return response(HttpStatus.BAD_REQUEST, "Please upload a csv file!");
+        }
+        userService.uploadUsersFromCSV(multipartFile);
+        return response(OK, "File uploaded: " + StringUtils.cleanPath(multipartFile.getOriginalFilename()));
+    }
+
+    @GetMapping
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);

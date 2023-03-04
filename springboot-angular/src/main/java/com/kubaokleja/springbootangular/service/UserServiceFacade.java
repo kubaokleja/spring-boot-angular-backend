@@ -14,8 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 
 @Service
 @Transactional
@@ -86,5 +88,9 @@ public class UserServiceFacade {
 
     public void changePassword(String password) {
         userDetailsService.changePassword(password);
+    }
+
+    public void uploadUsersFromCSV(MultipartFile multipartFile) throws IOException {
+        userManagementService.uploadUserFromCSV(multipartFile);
     }
 }

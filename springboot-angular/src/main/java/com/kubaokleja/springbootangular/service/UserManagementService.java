@@ -9,8 +9,10 @@ import com.kubaokleja.springbootangular.exception.UsernameExistException;
 import com.kubaokleja.springbootangular.repository.RoleRepository;
 import com.kubaokleja.springbootangular.repository.UserRepository;
 import com.kubaokleja.springbootangular.service.email.EmailSender;
+import com.kubaokleja.springbootangular.utility.CSVHelper;
 import com.kubaokleja.springbootangular.validation.UserValidator;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -107,6 +111,24 @@ public class UserManagementService {
             userRepository.delete(user);
         } else {
             throw new UserNotFoundException(NO_USER_FOUND);
+        }
+    }
+
+    void uploadUserFromCSV(MultipartFile multipartFile) throws IOException{
+        List<UserDTO> users = CSVHelper.csvToUserDTO(multipartFile.getInputStream());
+
+        String validationResult;
+        for(UserDTO userDTO: users) {
+            try {
+                validationResult = userValidator.validateUserInputFromFile(userDTO);
+                if(StringUtils.isEmpty(validationResult)) {
+                    createUser(userDTO);
+                }
+            } catch (EmailExistException e) {
+                //validationResult
+            } catch (UsernameExistException e) {
+                e.printStackTrace();
+            }
         }
     }
 
