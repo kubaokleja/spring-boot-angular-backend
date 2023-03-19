@@ -11,15 +11,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
 @Qualifier("customUserDetailsService")
 @RequiredArgsConstructor
 class CustomUserDetailsService implements UserDetailsService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);
-    private final LoginAttemptService loginAttemptService;
     private final UserServiceFacade userServiceFacade;
 
     @Override
@@ -30,27 +27,7 @@ class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found by username: " + username);
         }
         else {
-            validateLoginAttempt(user);
-            userServiceFacade.save(user);
-            UserPrincipal userPrincipal = new UserPrincipal(user);
-            LOGGER.info("Returning found user by username: " + username);
-            return userPrincipal;
+            return new UserPrincipal(user);
         }
     }
-
-    private void validateLoginAttempt(UserDTO user) {
-        if(user.getIsNotLocked()){
-            if(loginAttemptService.hasExceededMaxAttempts(user.getUsername())){
-                user.setIsNotLocked(false);
-            }
-            else{
-                user.setLastLoginToDisplay(user.getLastLoginDate());
-                user.setLastLoginDate(new Date());
-                user.setIsNotLocked(true);
-            }
-        } else{
-            loginAttemptService.evictUserFromLoginAttemptCache(user.getUsername());
-        }
-    }
-
 }

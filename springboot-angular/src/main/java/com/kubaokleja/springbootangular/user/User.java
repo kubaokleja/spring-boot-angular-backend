@@ -40,7 +40,7 @@ class User implements Serializable {
     private Boolean isNotLocked;
     private LocalDateTime expirationDate;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(
@@ -70,6 +70,7 @@ class UserMapper {
                 .joinDate(user.getJoinDate())
                 .isActive(user.getIsActive())
                 .isNotLocked(user.getIsNotLocked())
+                .expirationDate(user.getExpirationDate())
                 .roles(mapUserRolesToRolesDTO(user.getRoles()))
                 .build();
     }
@@ -85,6 +86,7 @@ class UserMapper {
 
     private static RoleDTO mapUserRoleToRoleDTO(Role role) {
         return RoleDTO.builder()
+                .id(role.getId())
                 .name(role.getName())
                 .authorities(mapUserRoleToAuthoritiesDTO(role.getAuthorities()))
                 .build();
@@ -101,6 +103,7 @@ class UserMapper {
 
     private static AuthorityDTO mapUserAuthorityToAuthorityDTO(Authority authority) {
         return AuthorityDTO.builder()
+                .id(authority.getId())
                 .name(authority.getName())
                 .build();
     }

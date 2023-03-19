@@ -8,7 +8,6 @@ import org.passay.*;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CustomPasswordValidator implements ConstraintValidator<Password, String> {
 
@@ -45,14 +44,11 @@ public class CustomPasswordValidator implements ConstraintValidator<Password, St
         }
 
         List<String> messages = validator.getMessages(result);
-        String messageTemplate = messages.stream().collect(Collectors.joining(" "));
+        String messageTemplate = String.join(" ", messages);
         context.buildConstraintViolationWithTemplate(messageTemplate)
                 .addConstraintViolation()
                 .disableDefaultConstraintViolation();
         return false;
     }
 
-    static void test() {
-
-    }
 }

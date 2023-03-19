@@ -8,6 +8,7 @@ class SpringbootAngularApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.println("ABC");
 	}
 
 }

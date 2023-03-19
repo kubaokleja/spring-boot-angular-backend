@@ -1,4 +1,4 @@
-package com.kubaokleja.springbootangular.integration;
+package com.kubaokleja.springbootangular.user.integration;
 
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

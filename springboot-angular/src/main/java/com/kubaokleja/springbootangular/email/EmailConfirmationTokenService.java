@@ -18,7 +18,7 @@ class EmailConfirmationTokenService {
                         .token(emailConfirmationDTO.getToken())
                         .confirmedAt(emailConfirmationDTO.getConfirmedAt())
                         .createdAt(emailConfirmationDTO.getCreatedAt())
-                        .expiresAt(emailConfirmationDTO.getCreatedAt())
+                        .expiresAt(emailConfirmationDTO.getExpiresAt())
                         .userId(emailConfirmationDTO.getUserId())
                         .build());
     }
@@ -30,7 +30,7 @@ class EmailConfirmationTokenService {
                        .token(e.getToken())
                        .confirmedAt(e.getConfirmedAt())
                        .createdAt(e.getCreatedAt())
-                       .expiresAt(e.getCreatedAt())
+                       .expiresAt(e.getExpiresAt())
                        .userId(e.getUserId())
                        .build())
                .orElseThrow(() -> new IllegalStateException(TOKEN_NOT_FOUND));

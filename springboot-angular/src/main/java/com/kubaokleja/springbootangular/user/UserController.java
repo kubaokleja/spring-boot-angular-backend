@@ -63,20 +63,6 @@ class UserController extends ExceptionHandling {
         return response(OK, "Password has been changed");
     }
 
-    /* TODO: HANDLE IT IN MORE GENERIC WAY
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<HttpResponse>  handleUserFieldsValidation(MethodArgumentNotValidException exception) {
-        LOGGER.error(exception.getMessage());
-        String message = exception
-                .getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(e -> userValidationFieldMap.get(e.getField()) + ": " + e.getDefaultMessage())
-                .collect(Collectors.joining( ", "));
-        return response(BAD_REQUEST, message);
-    }
-    */
-
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);

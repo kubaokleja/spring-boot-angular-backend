@@ -1,13 +1,15 @@
 package com.kubaokleja.springbootangular.user;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.Collection;
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoleDTO{
+    private Long id;
     private String name;
     private Collection<AuthorityDTO> authorities;
 }

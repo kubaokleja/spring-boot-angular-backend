@@ -45,19 +45,19 @@ class JwtTokenProvider {
         return Arrays.stream(claims).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
-    public Authentication getAuthentication(String username, List<GrantedAuthority> authorities, HttpServletRequest request) {
+    Authentication getAuthentication(String username, List<GrantedAuthority> authorities, HttpServletRequest request) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
             new UsernamePasswordAuthenticationToken(username, null, authorities);
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         return usernamePasswordAuthenticationToken;
     }
 
-    public boolean isTokenValid(String username, String token) {
+    boolean isTokenValid(String username, String token) {
         JWTVerifier verifier = getJWTVerifier();
         return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
     }
 
-    public String getSubject(String token){
+    String getSubject(String token){
         JWTVerifier verifier = getJWTVerifier();
         return verifier.verify(token).getSubject();
     }

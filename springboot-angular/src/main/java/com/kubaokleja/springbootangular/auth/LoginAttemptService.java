@@ -30,11 +30,11 @@ public class LoginAttemptService {
                 });
     }
 
-    public void evictUserFromLoginAttemptCache(String username){
+    void evictUserFromLoginAttemptCache(String username){
         loggingAttemptCache.invalidate(username) ;
     }
 
-    public void addUserToLoginAttemptCache(String username) {
+    void addUserToLoginAttemptCache(String username) {
         int attempt = 0;
         try {
             attempt = ATTEMPT_INCREMENT + loggingAttemptCache.get(username);
@@ -44,7 +44,7 @@ public class LoginAttemptService {
         loggingAttemptCache.put(username, attempt);
     }
 
-    public boolean hasExceededMaxAttempts(String username) {
+    boolean hasExceededMaxAttempts(String username) {
         try {
             return loggingAttemptCache.get(username) >= MAXIMUM_ATTEMPT_NUMBER;
         } catch (ExecutionException e) {

@@ -1,10 +1,12 @@
 package com.kubaokleja.springbootangular.user;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthorityDTO {
+    private Long id;
     private String name;
 }

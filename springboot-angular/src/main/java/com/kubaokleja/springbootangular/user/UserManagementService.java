@@ -76,10 +76,10 @@ public class UserManagementService {
         
         return userDTO;
     }
-//TODO: Remove repetitive code to helper
+
     UserDTO updateUser(UserDTO userDTO) throws EmailExistsException, UserNotFoundException {
 
-        UserDTO existingUser = userRepository.findUserByUserId(userDTO.getUserId())
+        UserDTO existingUser = userRepository.findUserByUsername(userDTO.getUsername())
                 .map(User::toDTO)
                 .orElseThrow(() -> new UserNotFoundException(NO_USER_FOUND));
 

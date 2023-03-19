@@ -1,15 +1,16 @@
-package com.kubaokleja.springbootangular.service;
+package com.kubaokleja.springbootangular.user;
 
+import com.kubaokleja.springbootangular.email.EmailFacade;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserManagementServiceTest {
-/*
+class UserManagementServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -19,11 +20,12 @@ public class UserManagementServiceTest {
     @Mock
     private UserValidator userValidator;
     @Mock
-    private EmailSender emailSender;
+    private EmailFacade emailFacade;
 
     @InjectMocks
     private UserManagementService userManagementService;
 
+    /*
     private UserDTO userDTO;
     private Role role;
     private User user;

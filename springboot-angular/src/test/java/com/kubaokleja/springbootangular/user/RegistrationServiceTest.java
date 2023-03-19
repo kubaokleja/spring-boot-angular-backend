@@ -1,4 +1,4 @@
-package com.kubaokleja.springbootangular.service;
+package com.kubaokleja.springbootangular.user;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

@@ -10,6 +10,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 class AuthenticationService {
@@ -18,7 +20,7 @@ class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
     private final UserServiceFacade userServiceFacade;
-
+    private final LoginAttemptService loginAttemptService;
 
     void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
@@ -32,8 +34,27 @@ class AuthenticationService {
 
     UserPrincipal login(UserDTO userDTO) {
         authenticate(userDTO.getUsername(), userDTO.getPassword());
-        UserDTO loggedUser = userServiceFacade.findUserByUsername(userDTO.getUsername());
-        LOGGER.info("User: " + userDTO.getUsername() + "logged in successfully.");
+        UserDTO loggedUser = validateLoginAttempt(userDTO);
+        LOGGER.info("User: " + loggedUser.getUsername() + "logged in successfully.");
         return new UserPrincipal(loggedUser);
     }
+
+    private UserDTO validateLoginAttempt(UserDTO user) {
+        UserDTO loggedUser = userServiceFacade.findUserByUsername(user.getUsername());
+        if(loggedUser.getIsNotLocked()){
+            if(loginAttemptService.hasExceededMaxAttempts(loggedUser.getUsername())) {
+                loggedUser.setIsNotLocked(false);
+            }
+            else {
+                loggedUser.setLastLoginToDisplay(loggedUser.getLastLoginDate());
+                loggedUser.setLastLoginDate(new Date());
+                loggedUser.setIsNotLocked(true);
+            }
+            userServiceFacade.save(loggedUser);
+        } else {
+            loginAttemptService.evictUserFromLoginAttemptCache(loggedUser.getUsername());
+        }
+        return loggedUser;
+    }
+
 }

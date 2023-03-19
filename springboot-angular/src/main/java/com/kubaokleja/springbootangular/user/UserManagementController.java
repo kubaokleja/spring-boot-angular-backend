@@ -21,7 +21,8 @@ import java.util.Optional;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
-@RestController("/user-management")
+@RestController()
+@RequestMapping("/user-management")
 @RequiredArgsConstructor
 class UserManagementController {
 
@@ -52,7 +53,7 @@ class UserManagementController {
     }
 
     @PreAuthorize("hasAuthority('user:delete')")
-    @DeleteMapping("{userId}")
+    @DeleteMapping("/{userId}")
     ResponseEntity<HttpResponse> deleteUser(@PathVariable("userId") String userId) throws UserNotFoundException {
         userManagementService.deleteUser(userId);
         return new ResponseEntity<>(new HttpResponse(OK.value(), OK, OK.getReasonPhrase().toUpperCase(),

@@ -18,6 +18,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -127,6 +129,18 @@ public class ExceptionHandling {
     @ExceptionHandler(MailSendException.class)
     public ResponseEntity<HttpResponse> handleMailConnectException(MailSendException exc) {
         return createHttpResponse(INTERNAL_SERVER_ERROR, MAIL_SERVICE_FAILED);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<HttpResponse>  handleUserFieldsValidation(MethodArgumentNotValidException exception) {
+        LOGGER.error(exception.getMessage());
+        String message = exception
+                .getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(e -> e.getField() + ": " + e.getDefaultMessage())
+                .collect(Collectors.joining( ", "));
+        return createHttpResponse(BAD_REQUEST, message);
     }
 
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {

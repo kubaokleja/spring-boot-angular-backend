@@ -18,6 +18,8 @@ import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO{
 
     public static final String NUMBER_AND_LETTER_REGEX = "[A-Za-z0-9]+";
@@ -72,6 +74,7 @@ class UserDTOMapper {
                 .joinDate(userDTO.getJoinDate())
                 .isActive(userDTO.getIsActive())
                 .isNotLocked(userDTO.getIsNotLocked())
+                .expirationDate(userDTO.getExpirationDate())
                 .roles(mapUserDTORolesToRoles(userDTO.getRoles()))
                 .build();
     }
@@ -87,6 +90,7 @@ class UserDTOMapper {
 
     private static Role mapUserRoleDTOToRole(RoleDTO role) {
         return Role.builder()
+                .id(role.getId())
                 .name(role.getName())
                 .authorities(mapUserRoleDTOToAuthorities(role.getAuthorities()))
                 .build();
@@ -103,6 +107,7 @@ class UserDTOMapper {
 
     private static Authority mapUserAuthorityDTOToAuthority(AuthorityDTO authority) {
         return Authority.builder()
+                .id(authority.getId())
                 .name(authority.getName())
                 .build();
     }

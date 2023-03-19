@@ -1,7 +1,17 @@
-package com.kubaokleja.springbootangular.repository;
+package com.kubaokleja.springbootangular.user;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
 
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.data.domain.PageRequest.of;
 
 /*
@@ -10,7 +20,7 @@ import static org.springframework.data.domain.PageRequest.of;
  */
 @DataJpaTest
 public class UserRepositoryTest {
-/*
+
     @Autowired
     private UserRepository userRepository;
 
@@ -80,25 +90,10 @@ public class UserRepositoryTest {
         userRepository.save(user);
 
         //when
-        User savedUser = userRepository.findUserByUsername(user.getUsername());
+        Optional<User> savedUser = userRepository.findUserByUsername(user.getUsername());
 
         //then
-        assertThat(savedUser.getId()).isEqualTo(user.getId());
-    }
-
-    @DisplayName("update user test")
-    @Test
-    public void givenUser_whenUpdate_returnUpdatedUser(){
-        //given
-        userRepository.save(user);
-
-        //when
-        User savedUser = userRepository.findById(user.getId()).get();
-        savedUser.setEmail("updated@mail.pl");
-        User updatedUser = userRepository.save(savedUser);
-
-        //then
-        assertThat(updatedUser.getEmail()).isEqualTo("updated@mail.pl");
+        assertTrue(savedUser.isPresent());
     }
 
     @DisplayName("delete user test")
@@ -122,10 +117,10 @@ public class UserRepositoryTest {
         userRepository.save(user);
 
         //when
-        User savedUser = userRepository.findByEmailNativeSQLNamedParam(user.getEmail());
+        Optional<User> savedUser = userRepository.findByEmailNativeSQLNamedParam(user.getEmail());
 
         //then
-        assertThat(savedUser.getId()).isEqualTo(user.getId());
+        assertTrue(savedUser.isPresent());
     }
 
     @DisplayName("get users test")
@@ -149,5 +144,4 @@ public class UserRepositoryTest {
         //then
         assertThat(users.getTotalElements()).isEqualTo(1);
     }
-*/
 }

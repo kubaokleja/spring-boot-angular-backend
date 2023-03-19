@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 import static com.kubaokleja.springbootangular.auth.SecurityConstant.ADMIN;
 
 @Component
-@Profile("!prod")
+@Profile("dev")
 @RequiredArgsConstructor
 @Transactional
 class DevUserSetupConfig implements UserSetupConfig {

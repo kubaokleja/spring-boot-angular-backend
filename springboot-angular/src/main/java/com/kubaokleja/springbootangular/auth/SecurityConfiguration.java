@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,9 +37,11 @@ public class SecurityConfiguration {
         http
             .csrf().disable()  //in stateless API it can be disabled, we have our own token
             .cors()
-            .and().sessionManagement().sessionCreationPolicy(STATELESS)
-            .and().authorizeRequests().antMatchers(PUBLIC_URLS).permitAll()
+            .and().authorizeRequests()
+            .antMatchers(PUBLIC_URLS).permitAll()
+            .antMatchers(HttpMethod.POST, "/users").permitAll()
             .anyRequest().authenticated()
+            .and().sessionManagement().sessionCreationPolicy(STATELESS)
             .and().exceptionHandling()
             .accessDeniedHandler(jwtAccessDeniedHandler)
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
