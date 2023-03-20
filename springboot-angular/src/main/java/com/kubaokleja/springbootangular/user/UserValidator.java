@@ -67,7 +67,8 @@ class UserValidator {
             validationResult.append("First name empty. ");
         }
         else {
-            if(!StringUtils.isAlphanumeric(userDTO.getFirstName()) || userDTO.getFirstName().length() > nameMaxLength) {
+            if(!StringUtils.isAlphanumeric(userDTO.getFirstName()) ||
+                    userDTO.getFirstName().length() > nameMaxLength) {
                 validationResult.append("Wrong first name format. ");
             }
         }
@@ -76,7 +77,8 @@ class UserValidator {
             validationResult.append("Last name empty. ");
         }
         else {
-            if(!StringUtils.isAlphanumeric(userDTO.getLastName()) || userDTO.getLastName().length() > nameMaxLength) {
+            if(!StringUtils.isAlphanumeric(userDTO.getLastName())
+                    || userDTO.getLastName().length() > nameMaxLength) {
                 validationResult.append("Wrong last name format. ");
             }
         }
