@@ -8,6 +8,7 @@ import com.kubaokleja.springbootangular.exception.EmailNotFoundException;
 import com.kubaokleja.springbootangular.exception.UserNotFoundException;
 import com.kubaokleja.springbootangular.exception.UsernameExistsException;
 import com.kubaokleja.springbootangular.user.enumeration.RoleEnum;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,16 +24,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.kubaokleja.springbootangular.auth.SecurityConstant.ACCESS_DENIED_MESSAGE;
 import static com.kubaokleja.springbootangular.email.EmailConstant.*;
 import static com.kubaokleja.springbootangular.exception.constant.ExceptionConstant.*;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class UserService {
-
 
     private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
@@ -98,19 +97,14 @@ class UserService {
     }
 
     UserDTO find(String userId) throws AccessDeniedException, UserNotFoundException {
-        UserDTO user = userRepository.findUserByUserId(userId)
-                .map(User::toDTO)
-                .orElseThrow(() -> new UserNotFoundException(NO_USER_FOUND));
-        validateUserActionPermission(user, userId);
+        UserDTO user = findUserByUserId(userId);
+        validateUserActionPermission(userId);
         return user;
     }
 
     UserDTO update(String userId, UserDTO userDTO) throws EmailExistsException, UserNotFoundException {
-        UserDTO user = userRepository.findUserByUserId(userId)
-                .map(User::toDTO)
-                .orElseThrow(() -> new UserNotFoundException(NO_USER_FOUND));
-        validateUserActionPermission(user, userId);
-
+        UserDTO user = findUserByUserId(userId);
+        validateUserActionPermission(userId);
         if(!user.getEmail().equalsIgnoreCase(userDTO.getEmail())) {
             userValidator.validateEmail(userDTO.getEmail());
         }
@@ -124,11 +118,8 @@ class UserService {
     }
 
     void delete(String userId) throws UserNotFoundException {
-        UserDTO user = userRepository.findUserByUserId(userId)
-                .map(User::toDTO)
-                .orElseThrow(() -> new UserNotFoundException(NO_USER_FOUND));
-        validateUserActionPermission(user, userId);
-
+        UserDTO user = findUserByUserId(userId);
+        validateUserActionPermission(userId);
         userRepository.delete(user.toEntity());
     }
 
@@ -154,21 +145,10 @@ class UserService {
         userRepository.save(user.toEntity());
     }
 
-    private Collection<Role> mapToRoles(Collection<RoleDTO> roles) {
-        return roles.stream()
-                .map(roleDTO -> Role.builder()
-                        .name(roleDTO.getName())
-                        .authorities(mapToAuthorities(roleDTO.getAuthorities()))
-                        .build())
-                .collect(Collectors.toSet());
-    }
-
-    private Collection<Authority> mapToAuthorities(Collection<AuthorityDTO> authorities) {
-        return authorities.stream()
-                .map(authorityDTO -> Authority.builder()
-                        .name(authorityDTO.getName())
-                        .build())
-                .collect(Collectors.toSet());
+    private UserDTO findUserByUserId(String userId) throws UserNotFoundException {
+        return userRepository.findUserByUserId(userId)
+                .map(User::toDTO)
+                .orElseThrow(() -> new UserNotFoundException(NO_USER_FOUND));
     }
 
     private void sendConfirmationEmail(UserDTO user) {
@@ -204,7 +184,7 @@ class UserService {
         userRepository.save(user.toEntity());
     }
 
-    private void validateUserActionPermission(UserDTO user, String userId) {
+    private void validateUserActionPermission(String userId) {
         UserDTO loggedUser = getLoggedUser().orElseThrow(() -> new AccessDeniedException(ACCESS_DENIED_MESSAGE));
         validateIfLoggedUserHasSameId(loggedUser, userId);
     }

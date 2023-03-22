@@ -1,5 +1,6 @@
 package com.kubaokleja.springbootangular.auth;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +23,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration {
+class SecurityConfiguration {
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;

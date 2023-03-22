@@ -3,6 +3,7 @@ package com.kubaokleja.springbootangular.auth;
 import com.kubaokleja.springbootangular.user.AuthorityDTO;
 import com.kubaokleja.springbootangular.user.RoleDTO;
 import com.kubaokleja.springbootangular.user.UserDTO;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class UserPrincipal implements UserDetails {
 
     private final UserDTO user;

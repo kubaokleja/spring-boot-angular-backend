@@ -7,6 +7,7 @@ import com.kubaokleja.springbootangular.exception.EmailExistsException;
 import com.kubaokleja.springbootangular.exception.UserNotFoundException;
 import com.kubaokleja.springbootangular.exception.UsernameExistsException;
 import com.kubaokleja.springbootangular.user.enumeration.RoleEnum;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,8 +28,8 @@ import static com.kubaokleja.springbootangular.exception.constant.ExceptionConst
 import static org.springframework.data.domain.PageRequest.of;
 
 @Service
-@RequiredArgsConstructor
-public class UserManagementService {
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+class UserManagementService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(UserManagementService.class);
 

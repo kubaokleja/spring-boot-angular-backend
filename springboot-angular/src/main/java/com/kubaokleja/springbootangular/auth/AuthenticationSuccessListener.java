@@ -1,12 +1,13 @@
 package com.kubaokleja.springbootangular.auth;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class AuthenticationSuccessListener {
 
     private final LoginAttemptService loginAttemptService;

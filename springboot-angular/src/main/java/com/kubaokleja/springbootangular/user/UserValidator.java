@@ -2,6 +2,7 @@ package com.kubaokleja.springbootangular.user;
 
 import com.kubaokleja.springbootangular.exception.EmailExistsException;
 import com.kubaokleja.springbootangular.exception.UsernameExistsException;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,7 @@ import static com.kubaokleja.springbootangular.exception.constant.ExceptionConst
 import static com.kubaokleja.springbootangular.exception.constant.ExceptionConstant.USERNAME_ALREADY_EXISTS;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class UserValidator {
 
     private final UserRepository userRepository;

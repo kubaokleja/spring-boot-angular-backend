@@ -1,52 +1,68 @@
-package com.kubaokleja.springbootangular.user.integration;
+package com.kubaokleja.springbootangular.user;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserIntegrationTest {
-/*
+
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private EmailConfirmationTokenRepository emailConfirmationTokenRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
-    private UserDTO userDTO;
-    private User user;
+    @Autowired RoleRepository roleRepository;
 
-    @BeforeEach
-    void setup() {
-        objectMapper.enable(MapperFeature.USE_ANNOTATIONS);
-        prepareDefaultUserDTO();
-    }
+
+    private UserDTO userDTO;
 
     @BeforeAll
     void preSetup() {
         saveRoles();
     }
 
-    @AfterAll
-    void cleanUp() {
-        emailConfirmationTokenRepository.deleteAll();
-        userRepository.deleteAll();
+    void saveRoles(){
+        Optional<Role> roleUser = roleRepository.findByName("ROLE_USER");
+        if(roleUser.isEmpty()) {
+            Role role = Role.builder()
+                    .name("ROLE_USER")
+                    .build();
+            roleRepository.save(role);
+        }
+        Optional<Role> roleAdmin = roleRepository.findByName("ROLE_ADMIN");
+        if(roleAdmin.isEmpty()) {
+            Role role = Role.builder()
+                    .name("ROLE_ADMIN")
+                    .build();
+            roleRepository.save(role);
+        }
+    }
+
+    @BeforeEach
+    void setup() {
+        objectMapper.enable(MapperFeature.USE_ANNOTATIONS);
+        prepareDefaultUserDTO();
     }
 
     private void prepareDefaultUserDTO() {
@@ -59,36 +75,20 @@ public class UserIntegrationTest {
                 .build();
     }
 
-    void saveRoles(){
-        Role roleUser = roleRepository.findByName("ROLE_USER");
-        if(roleUser == null) {
-            roleUser = Role.builder()
-                    .name("ROLE_USER")
-                    .build();
-            roleRepository.save(roleUser);
-        }
-        Role roleAdmin = roleRepository.findByName("ROLE_ADMIN");
-        if(roleAdmin == null) {
-            roleAdmin = Role.builder()
-                    .name("ROLE_ADMIN")
-                    .build();
-            roleRepository.save(roleAdmin);
-        }
-    }
-
     @Test
     @DisplayName("User registration integration test - positive scenario")
+    @WithMockUser(authorities = "user:create")
     public void givenUserDTOObject_whenRegisterUser_thenReturnSavedUser() throws Exception{
         //given
         //when
         objectMapper.disable(MapperFeature.USE_ANNOTATIONS);
-        ResultActions response = mockMvc.perform(post("/user/register")
+        ResultActions response = mockMvc.perform(post("/user-management")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDTO)));
 
         //then
         response.andDo(print())
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName",
                         is(userDTO.getFirstName())));
 
@@ -101,7 +101,7 @@ public class UserIntegrationTest {
         //given
         userDTO.setEmail("wrongemailformat");
         //when
-        ResultActions response = mockMvc.perform(post("/user/register")
+        ResultActions response = mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDTO)));
 
@@ -119,7 +119,7 @@ public class UserIntegrationTest {
         userDTO.setPassword("nospecialcharandbigletter");
         objectMapper.disable(MapperFeature.USE_ANNOTATIONS);
         //when
-        ResultActions response = mockMvc.perform(post("/user/register")
+        ResultActions response = mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userDTO)));
 
@@ -128,5 +128,4 @@ public class UserIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
     }
-*/
 }

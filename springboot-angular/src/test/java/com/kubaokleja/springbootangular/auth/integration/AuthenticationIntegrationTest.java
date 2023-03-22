@@ -45,6 +45,7 @@ class AuthenticationIntegrationTest {
 
     @BeforeAll
     void preSetup() {
+        userServiceFacade.saveUserRole();
         userDTO = UserDTO.builder()
                 .firstName("login")
                 .lastName("login")
@@ -55,6 +56,7 @@ class AuthenticationIntegrationTest {
                 .isNotLocked(true)
                 .joinDate(new Date())
                 .roles(List.of(RoleDTO.builder()
+                        .id(1L)
                         .name(RoleEnum.ROLE_USER.name())
                         .authorities(new ArrayList<>())
                         .build()))

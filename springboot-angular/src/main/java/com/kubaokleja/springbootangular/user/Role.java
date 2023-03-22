@@ -3,6 +3,7 @@ package com.kubaokleja.springbootangular.user;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -22,13 +23,13 @@ class Role {
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "roles_authorities",
             joinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "authority_id", referencedColumnName = "id"))
-    private Collection<Authority> authorities;
+    private Collection<Authority> authorities = new ArrayList<>();
 
 }

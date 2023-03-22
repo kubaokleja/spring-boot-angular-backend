@@ -1,6 +1,7 @@
 package com.kubaokleja.springbootangular.email;
 
 import com.kubaokleja.springbootangular.common.dto.EmailDTO;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);

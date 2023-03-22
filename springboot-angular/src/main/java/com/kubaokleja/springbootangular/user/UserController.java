@@ -6,6 +6,7 @@ import com.kubaokleja.springbootangular.exception.EmailNotFoundException;
 import com.kubaokleja.springbootangular.exception.UserNotFoundException;
 import com.kubaokleja.springbootangular.exception.UsernameExistsException;
 import com.kubaokleja.springbootangular.exception.handler.ExceptionHandling;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class UserController extends ExceptionHandling {
 
     private final UserService userService;

@@ -1,12 +1,13 @@
 package com.kubaokleja.springbootangular.email;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import static com.kubaokleja.springbootangular.email.EmailConstant.TOKEN_NOT_FOUND;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class EmailConfirmationTokenService {
 
     private final EmailConfirmationTokenRepository confirmationTokenRepository;

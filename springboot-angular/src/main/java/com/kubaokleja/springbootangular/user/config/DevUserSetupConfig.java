@@ -2,6 +2,7 @@ package com.kubaokleja.springbootangular.user.config;
 
 import com.kubaokleja.springbootangular.user.UserServiceFacade;
 import com.kubaokleja.springbootangular.user.UserDTO;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -15,7 +16,7 @@ import static com.kubaokleja.springbootangular.auth.SecurityConstant.ADMIN;
 
 @Component
 @Profile("dev")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @Transactional
 class DevUserSetupConfig implements UserSetupConfig {
 

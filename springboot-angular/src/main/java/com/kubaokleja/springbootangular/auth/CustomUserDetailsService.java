@@ -2,6 +2,7 @@ package com.kubaokleja.springbootangular.auth;
 
 import com.kubaokleja.springbootangular.user.UserServiceFacade;
 import com.kubaokleja.springbootangular.user.UserDTO;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Qualifier("customUserDetailsService")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class CustomUserDetailsService implements UserDetailsService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(CustomUserDetailsService.class);

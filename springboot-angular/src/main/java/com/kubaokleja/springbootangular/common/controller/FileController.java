@@ -1,5 +1,6 @@
 package com.kubaokleja.springbootangular.common.controller;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -17,7 +18,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 
 @RestController
 @RequestMapping("/files")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class FileController {
 
     private final ResourceLoader resourceLoader;

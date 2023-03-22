@@ -20,7 +20,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO{
+public class UserDTO {
 
     public static final String NUMBER_AND_LETTER_REGEX = "[A-Za-z0-9]+";
 
@@ -51,7 +51,7 @@ public class UserDTO{
     private Boolean isActive;
     private Boolean isNotLocked;
     private LocalDateTime expirationDate;
-    private Collection<RoleDTO> roles;
+    private Collection<RoleDTO> roles = new ArrayList<>();
 
     public User toEntity() {
         return UserDTOMapper.toEntity(this);

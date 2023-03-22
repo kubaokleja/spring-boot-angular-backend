@@ -2,6 +2,7 @@ package com.kubaokleja.springbootangular.auth;
 
 import static com.kubaokleja.springbootangular.auth.SecurityConstant.*;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;

@@ -5,6 +5,7 @@ import com.kubaokleja.springbootangular.common.helper.CSVHelper;
 import com.kubaokleja.springbootangular.exception.EmailExistsException;
 import com.kubaokleja.springbootangular.exception.UserNotFoundException;
 import com.kubaokleja.springbootangular.exception.UsernameExistsException;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController()
 @RequestMapping("/user-management")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class UserManagementController {
 
     private static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";

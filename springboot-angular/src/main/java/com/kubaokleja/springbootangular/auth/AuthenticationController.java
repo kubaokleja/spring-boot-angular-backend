@@ -1,6 +1,7 @@
 package com.kubaokleja.springbootangular.auth;
 
 import com.kubaokleja.springbootangular.user.UserDTO;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class AuthenticationController {
 
     private final AuthenticationService authenticationService;

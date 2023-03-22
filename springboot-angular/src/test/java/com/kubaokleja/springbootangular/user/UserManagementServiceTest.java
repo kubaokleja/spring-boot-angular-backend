@@ -1,13 +1,31 @@
 package com.kubaokleja.springbootangular.user;
 
 import com.kubaokleja.springbootangular.email.EmailFacade;
+import com.kubaokleja.springbootangular.exception.EmailExistsException;
+import com.kubaokleja.springbootangular.exception.UserNotFoundException;
+import com.kubaokleja.springbootangular.exception.UsernameExistsException;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserManagementServiceTest {
@@ -25,7 +43,6 @@ class UserManagementServiceTest {
     @InjectMocks
     private UserManagementService userManagementService;
 
-    /*
     private UserDTO userDTO;
     private Role role;
     private User user;
@@ -40,6 +57,7 @@ class UserManagementServiceTest {
         role = Role.builder()
                 .id(1L)
                 .name("ROLE_USER")
+                .authorities(new ArrayList<>())
                 .build();
 
         user = User.builder()
@@ -61,11 +79,11 @@ class UserManagementServiceTest {
     @DisplayName("User management - create user by admin (positive)")
     public void givenUserObject_whenCreateUser_thenReturnUserObject() throws EmailExistsException, UsernameExistsException {
         //given
-        given(roleRepository.findByName(anyString())).willReturn(role);
-        given(userRepository.save(any(User.class))).willReturn(user);
+        given(roleRepository.findByName(anyString())).willReturn(Optional.ofNullable(role));
+        given(userRepository.save(any())).willReturn(user);
 
         //when
-        User savedUser = userManagementService.createUser(userDTO);
+        UserDTO savedUser = userManagementService.createUser(userDTO);
 
         //then
         assertThat(savedUser).isNotNull();
@@ -104,12 +122,12 @@ class UserManagementServiceTest {
     @DisplayName("User management - update user by admin (positive). ")
     public void givenUserObject_whenUpdateUser_thenReturnUpdatedObject() throws UserNotFoundException, EmailExistsException {
         //given
-        given(userRepository.findUserByUsername(userDTO.getUsername())).willReturn(user);
+        given(userRepository.findUserByUsername(userDTO.getUsername())).willReturn(Optional.ofNullable(user));
         given(userRepository.save(any(User.class))).willReturn(user);
         userDTO.setFirstName("Updated");
 
         //when
-        User updatedUser = userManagementService.updateUser(userDTO);
+        UserDTO updatedUser = userManagementService.updateUser(userDTO);
 
         //then
         assertThat(updatedUser.getFirstName()).isEqualTo("Updated");
@@ -120,7 +138,7 @@ class UserManagementServiceTest {
     public void givenUserId_whenDeleteUser_thenNothing() throws UserNotFoundException {
         //given
         String userId = RandomStringUtils.random(10);
-        given(userRepository.findUserByUserId(userId)).willReturn(user);
+        given(userRepository.findUserByUserId(userId)).willReturn(Optional.ofNullable(user));
         willDoNothing().given(userRepository).delete(user);
 
         //when
@@ -135,7 +153,7 @@ class UserManagementServiceTest {
     public void givenUserId_whenDeleteUserNotFound_thenThrowUserNotFoundException() throws UserNotFoundException {
         //given
         String userId = RandomStringUtils.random(10);
-        given(userRepository.findUserByUserId(userId)).willReturn(null);
+        given(userRepository.findUserByUserId(userId)).willReturn(Optional.empty());
 
         //when
         assertThrows(UserNotFoundException.class, () ->{
@@ -143,7 +161,6 @@ class UserManagementServiceTest {
         });
 
         //then
-        verify(userRepository, never()).delete(any(User.class));
+        verify(userRepository, never()).delete(any());
     }
-*/
 }

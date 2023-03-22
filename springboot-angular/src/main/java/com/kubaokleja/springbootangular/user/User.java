@@ -40,14 +40,14 @@ class User implements Serializable {
     private Boolean isNotLocked;
     private LocalDateTime expirationDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(
                     name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    private Collection<Role> roles = new ArrayList<>();
 
     public UserDTO toDTO() {
         return UserMapper.toDTO(this);
