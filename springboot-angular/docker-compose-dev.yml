@@ -1,0 +1,34 @@
+version: '3'
+services:
+  springboot-angular:
+    image: springboot-angular-docker
+    restart: always
+    build: .
+    depends_on:
+      - mysqldb
+      - maildev
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      MYSQL_HOST: mysqldb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_PORT: 3306
+      MAILDEV_HOST: maildev
+  mysqldb:
+    container_name: mysqldb
+    image: mysql
+    volumes:
+      - "C:/Users/k-okl/Desktop/mysql:/var/lib/mysql"
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: springbootangular
+      MYSQL_ROOT_PASSWORD: root
+  maildev:
+    image: maildev/maildev
+    container_name: mail
+    ports:
+      - 1080:1080
+      - 1025:1025
