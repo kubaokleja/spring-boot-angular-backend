@@ -1,11 +1,8 @@
-package com.kubaokleja.springbootangular.exception.handler;
+package com.kubaokleja.springbootangular.exception;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.kubaokleja.springbootangular.common.dto.HttpResponse;
-import com.kubaokleja.springbootangular.exception.EmailExistsException;
-import com.kubaokleja.springbootangular.exception.EmailNotFoundException;
-import com.kubaokleja.springbootangular.exception.UserNotFoundException;
-import com.kubaokleja.springbootangular.exception.UsernameExistsException;
+import com.kubaokleja.springbootangular.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -42,8 +39,6 @@ public class ExceptionHandling {
     private static final String ACCOUNT_DISABLED = "Your account has been disabled. If this is an error, please contact administration";
     private static final String ERROR_PROCESSING_FILE = "Error occurred while processing file";
     private static final String NOT_ENOUGH_PERMISSION = "You do not have enough permission";
-    private static final String FILE_TOO_LARGE = "File too large.";
-    private static final String MAIL_SERVICE_FAILED = "Mail service failed.";
 
 
     @ExceptionHandler(DisabledException.class)
@@ -108,6 +103,10 @@ public class ExceptionHandling {
         return createHttpResponse(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MSG);
     }
 
+    @ExceptionHandler(FootballApiException.class)
+    public ResponseEntity<HttpResponse> footballApiException(FootballApiException exception) {
+        return createHttpResponse(INTERNAL_SERVER_ERROR, exception.getMessage());
+    }
 
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> notFoundException(NoResultException exception) {

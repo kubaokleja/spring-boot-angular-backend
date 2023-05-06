@@ -41,3 +41,7 @@ validation:
       min-length: 4
     name:
       max-length: 255
+
+football:
+  api:
+    token: 4e5182c0e1a3499baf5996d6db5bde4c
