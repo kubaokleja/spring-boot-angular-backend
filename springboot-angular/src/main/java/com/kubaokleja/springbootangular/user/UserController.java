@@ -1,11 +1,8 @@
 package com.kubaokleja.springbootangular.user;
 
 import com.kubaokleja.springbootangular.common.dto.HttpResponse;
-import com.kubaokleja.springbootangular.exception.EmailExistsException;
-import com.kubaokleja.springbootangular.exception.EmailNotFoundException;
-import com.kubaokleja.springbootangular.exception.UserNotFoundException;
-import com.kubaokleja.springbootangular.exception.UsernameExistsException;
-import com.kubaokleja.springbootangular.exception.handler.ExceptionHandling;
+import com.kubaokleja.springbootangular.exception.*;
+import com.kubaokleja.springbootangular.exception.ExceptionHandling;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

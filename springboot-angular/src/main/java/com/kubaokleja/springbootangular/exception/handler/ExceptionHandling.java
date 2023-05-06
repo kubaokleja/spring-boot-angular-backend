@@ -39,6 +39,8 @@ public class ExceptionHandling {
     private static final String ACCOUNT_DISABLED = "Your account has been disabled. If this is an error, please contact administration";
     private static final String ERROR_PROCESSING_FILE = "Error occurred while processing file";
     private static final String NOT_ENOUGH_PERMISSION = "You do not have enough permission";
+    private static final String FILE_TOO_LARGE = "File too large.";
+    private static final String MAIL_SERVICE_FAILED = "Mail service failed.";
 
 
     @ExceptionHandler(DisabledException.class)
