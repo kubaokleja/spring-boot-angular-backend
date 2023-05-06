@@ -28,13 +28,24 @@ I'm aware of my limitations like css styling. I'd like to improve it in the futu
 * Role-based authorization with Spring Security
 * Mitigation of Brute Force Attack
 
+#### About me 
+ * Page about me with usage of bootstrap
+ 
+#### Home Page 
+  * Leaflet map with place where I grew up
+  
+#### Football API
+  * Premier League Top Scorers bookmark
+  * Data are taken from external football API (https://www.football-data.org/)
+  
+#### Profiles
+  * Prod profile has email sender with usage of AWS Email Service. Unfortunately, it has to be requested and paid to send emails to everyone. 
+  I don't want to exceed my free tier, so in code you can see only configuration for that feature.
+
 ### Tech Stack
 Java 11, Spring Boot, Angular, Spring Security, JWT,  MySQL, Flyway
 
-### Future Plans
+### Running the application
+You can run backend with usage of docker command: 
+*docker-compose -f docker-compose-dev.yml up*
 
-* Deployment to AWS (currently I have free tier account and learn AWS)
-* About Me Page
-* Synchronize with some external API (probably about football)
-* Blog (some blog with possibility to comment and react to posts)
-* E-Commerce (product purchase or food delivery)
