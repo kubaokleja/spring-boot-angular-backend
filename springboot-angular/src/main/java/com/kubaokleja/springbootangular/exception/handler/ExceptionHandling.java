@@ -2,10 +2,7 @@ package com.kubaokleja.springbootangular.exception.handler;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.kubaokleja.springbootangular.common.dto.HttpResponse;
-import com.kubaokleja.springbootangular.exception.EmailExistsException;
-import com.kubaokleja.springbootangular.exception.EmailNotFoundException;
-import com.kubaokleja.springbootangular.exception.UserNotFoundException;
-import com.kubaokleja.springbootangular.exception.UsernameExistsException;
+import com.kubaokleja.springbootangular.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -108,6 +105,10 @@ public class ExceptionHandling {
         return createHttpResponse(INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR_MSG);
     }
 
+    @ExceptionHandler(FootballApiException.class)
+    public ResponseEntity<HttpResponse> footballApiException(FootballApiException exception) {
+        return createHttpResponse(INTERNAL_SERVER_ERROR, exception.getMessage());
+    }
 
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> notFoundException(NoResultException exception) {
